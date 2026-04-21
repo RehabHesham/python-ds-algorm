@@ -201,6 +201,17 @@ class LinkedList {
     }
     return arr;
   }
+
+  linearSearch(value){
+    let current = this.head;
+    let index = -1;;
+    while(current){
+      index++;
+      if(current.value === value) return index;
+      current = current.next;
+    }
+    return -1;
+  }
 }
 
 let mylinkedList = new LinkedList();

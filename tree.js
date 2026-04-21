@@ -76,53 +76,134 @@ class BinarySearchTree {
 
     //recursion case => function calls itself
     if (value < current.value) {
-      return this.contains(value, current.left);  
-    }else if(value > current.value){
-        return this.contains(value, current.right);
+      return this.contains(value, current.left);
+    } else if (value > current.value) {
+      return this.contains(value, current.right);
     }
   }
 
-  minValue(node){
+  minValue(node) {
     let current = node;
-    while(current.left){
-        current = current.left;
+    while (current.left) {
+      current = current.left;
     }
     return current.value;
   }
 
-  #delete(value,current){
+  #delete(value, current) {
     // base case
-    if(!current) return null;
+    if (!current) return null;
 
     // recursion case
-    if(value < current.value){
-        current.left = this.#delete(value,current.left);
-    }else if(value > current.value){
-        current.right = this.#delete(value, current.right);
-    }else{
-        // found node to delete
+    if (value < current.value) {
+      current.left = this.#delete(value, current.left);
+    } else if (value > current.value) {
+      current.right = this.#delete(value, current.right);
+    } else {
+      // found node to delete
 
-        // if leaf node
-        if(!current.left && !current.right) return null;
+      // if leaf node
+      if (!current.left && !current.right) return null;
 
-        // has one child
-        if(!current.right){
-            return current.left;
-        }else if(!current.left){
-            return current.right;
-        }else{
-            // find right minValue
-                let subTreeMin = this.minValue(current.right);
-            // replace current with min
-                current.value = subTreeMin;
-            // delete minValue
-               current.right = this.#delete(subTreeMin, current.right);
-        }
+      // has one child
+      if (!current.right) {
+        return current.left;
+      } else if (!current.left) {
+        return current.right;
+      } else {
+        // find right minValue
+        let subTreeMin = this.minValue(current.right);
+        // replace current with min
+        current.value = subTreeMin;
+        // delete minValue
+        current.right = this.#delete(subTreeMin, current.right);
+      }
     }
     return current;
   }
-  delete(value){
-    this.root = this.#delete(value,this.root);
+  delete(value) {
+    this.root = this.#delete(value, this.root);
+  }
+
+  BreadthFirstSearch() {
+    let queue = [];
+    let results = [];
+
+    // intialize queue with root
+    queue.push(this.root);
+    while (queue.length) {
+      // shift from queue
+      let currentNode = queue.shift();
+
+      // push children in queue
+      if (currentNode.left) queue.push(currentNode.left);
+      if (currentNode.right) queue.push(currentNode.right);
+
+      // do your operation on node
+      // in our case push in results
+      results.push(currentNode.value);
+    }
+    return results;
+
+    // time complexity: O(n) , where n number of nodes in tree
+  }
+
+  // time complexity of DFS: O(n), where n number of nodes in tree
+  preOrderDFS() {
+    let results = [];
+
+    function traverse(node) {
+      // operation
+      // add value to array
+      results.push(node.value);
+
+      // traverse left
+      if (node.left) traverse(node.left);
+
+      // traverse right
+      if (node.right) traverse(node.right);
+    }
+
+    traverse(this.root);
+    return results;
+  }
+
+  postOrderDFS() {
+    let results = [];
+
+    function traverse(node) {
+      // traverse left
+      if (node.left) traverse(node.left);
+
+      // traverse right
+      if (node.right) traverse(node.right);
+
+      // operation
+      // add value to array
+      results.push(node.value);
+    }
+
+    traverse(this.root);
+    return results;
+  }
+
+  inOrderDFS() {
+    let results = [];
+
+    function traverse(node) {
+      // traverse left
+      if (node.left) traverse(node.left);
+
+      // operation
+      // add value to array
+      results.push(node.value);
+
+      // traverse right
+      if (node.right) traverse(node.right);
+    }
+
+    traverse(this.root);
+    return results;
   }
 }
 
@@ -131,3 +212,13 @@ const myTree = new BinarySearchTree();
 myTree.insert(47);
 myTree.insert(21);
 myTree.insert(18);
+myTree.insert(20);
+myTree.insert(70);
+myTree.insert(50);
+myTree.insert(80);
+
+console.log(myTree.BreadthFirstSearch());
+
+console.log(myTree.preOrderDFS());
+console.log(myTree.postOrderDFS());
+console.log(myTree.inOrderDFS());
